@@ -13,4 +13,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "NoteApp"
-include ':app'
+include(":app:")
+include(":core-ui")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
