@@ -1,5 +1,6 @@
 package br.com.alaksion.core_ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
@@ -20,4 +21,12 @@ data class Spacings(
 )
 
 val LocalSpacings = staticCompositionLocalOf { Spacings() }
+
+object NoteSpacings {
+
+    val spacings: Spacings
+        @Composable
+        get() = LocalSpacings.current
+
+}
 

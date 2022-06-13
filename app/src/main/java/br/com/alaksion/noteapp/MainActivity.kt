@@ -3,41 +3,33 @@ package br.com.alaksion.noteapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import br.com.alaksion.core_ui.theme.NoteAppTheme
+import br.com.alaksion.feature_login.presentation.NavAuthNavModule
+import com.example.navigation.AuthRouter
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.compose.withDI
 
-class MainActivity : ComponentActivity() {
+@ExperimentalComposeUiApi
+class MainActivity : ComponentActivity(), DIAware {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            br.com.alaksion.core_ui.theme.NoteAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+            NoteAppTheme {
+                withDI(AppDi) {
+                    val controller = rememberNavController()
+                    NavHost(navController = controller, startDestination = AuthRouter.Graph.route) {
+                        NavAuthNavModule(controller)
+                    }
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    br.com.alaksion.core_ui.theme.NoteAppTheme {
-        Greeting("Android")
-    }
+    override val di: DI
+        get() = AppDi
 }

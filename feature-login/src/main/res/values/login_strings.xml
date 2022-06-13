@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_or">or</string>
+    <string name="social_login_google">Continue with Google</string>
+    <string name="login">Login</string>
+    <string name="email_placeholder">E-mail</string>
+    <string name="password_placeholder">Password</string>
+    <string name="confirm_email_placeholder">Confirm E-mail</string>
+    <string name="not_a_member">Not a member? Register now.</string>
+    <string name="registration">Sign Up</string>
+    <string name="create_account">Create account</string>
+    <string name="email_format_error">Invalid e-mail format</string>
+    <string name="email_not_matching">E-mails don\'\t match</string>
+    <string name="empty"></string>
+    <string name="account_created">Account created successfully</string>
+    <string name="go_to_login">Go back to Login</string>
+</resources>

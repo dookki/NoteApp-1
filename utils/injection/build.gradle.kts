@@ -1,28 +1,21 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id ("com.google.gms.google-services")
 }
 
 android {
-    namespace = "br.com.alaksion.noteapp"
+    namespace = "br.com.alaksion.utils.injection"
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "br.com.alaksion.noteapp"
         minSdk = 23
         targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
         }
     }
@@ -33,33 +26,20 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.core.get()
     }
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
-    implementation(projects.coreUi)
-    implementation(projects.firebase.authentication)
-    implementation(projects.featureLogin)
-    implementation(projects.navigation)
-
-    implementation(libs.compose.navigation)
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.compose.ui)
-    implementation(libs.compose.activity)
-
     implementation(libs.kodein.core)
     implementation(libs.kodein.compose)
-
-    testImplementation(libs.junit)
-    debugImplementation(libs.bundles.compose.debug)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
 }
