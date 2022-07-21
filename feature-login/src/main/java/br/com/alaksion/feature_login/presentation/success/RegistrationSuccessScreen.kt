@@ -24,8 +24,8 @@ internal fun RegistrationSuccessScreen(
     navigator: NavController
 ) {
     RegistrationSuccessContent {
-        navigator.navigate(AuthRouter.Login.route) {
-            popUpTo(AuthRouter.Login.route)
+        navigator.navigate(AuthRouter.Routes.Login.path) {
+            popUpTo(AuthRouter.Routes.Login.path)
         }
     }
 }

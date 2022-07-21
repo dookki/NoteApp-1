@@ -1,16 +1,8 @@
 package br.com.alaksion.feature_login.presentation.login
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,6 +28,7 @@ import br.com.alaksion.feature_login.presentation.login.models.LoginState
 import br.com.alaksion.feature_login.presentation.login.models.LoginStateProvider
 import br.com.alaksion.utils.injection.rememberViewModel
 import com.example.navigation.AuthRouter
+import com.example.navigation.HomeRouter
 import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalComposeUiApi
@@ -54,33 +47,19 @@ internal fun LoginScreen(
         }
 
     LoginScreenContent(
-        onChangeEmail = { viewModel.onChangeEmail(it) },
-        onChangePassword = { viewModel.onChangePassword(it) },
-        toggleShowPassword = { viewModel.togglePasswordVisibility() },
-        submitLogin = { viewModel.submitLogin() },
-        submitGoogleLogin = {
-            socialLoginIntent.launch(1)
-        },
         scaffoldState = state,
         state = screenState,
-        navigateToRegister = {
-            navigator.navigate(AuthRouter.Registration.route)
-        }
+        handleIntent = { viewModel.handleIntent(it) }
     )
 
     LaunchedEffect(key1 = viewModel) {
         viewModel.events.collectLatest {
             when (it) {
-                is LoginEvents.LoginSuccess -> {
-                    state.snackbarHostState.showSnackbar(
-                        "Login succeeded"
-                    )
-                }
-                is LoginEvents.LoginError -> {
-                    state.snackbarHostState.showSnackbar(
-                        "Login failed"
-                    )
-                }
+                is LoginEvents.LoginSuccess -> navigator.navigate(HomeRouter.Routes.Home.path)
+                is LoginEvents.LoginError ->
+                    state.snackbarHostState.showSnackbar("Login failed")
+                is LoginEvents.LaunchGoogleLogin -> socialLoginIntent.launch(1)
+                is LoginEvents.GoToRegister -> navigator.navigate(AuthRouter.Routes.Registration.path)
             }
         }
     }
@@ -91,18 +70,13 @@ internal fun LoginScreen(
 private fun LoginScreenContent(
     state: LoginState,
     scaffoldState: ScaffoldState,
-    onChangeEmail: (String) -> Unit,
-    onChangePassword: (String) -> Unit,
-    toggleShowPassword: () -> Unit,
-    submitLogin: () -> Unit,
-    submitGoogleLogin: () -> Unit,
-    navigateToRegister: () -> Unit
+    handleIntent: (LoginIntent) -> Unit
 ) {
-    Scaffold(scaffoldState = scaffoldState) {
+    Scaffold(scaffoldState = scaffoldState) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(paddingValues)
                 .padding(NoteSpacings.spacings.large),
             verticalArrangement = Arrangement.Center
         ) {
@@ -110,11 +84,11 @@ private fun LoginScreenContent(
             LoginForm(
                 email = state.email,
                 password = state.password,
-                onChangeEmail = onChangeEmail,
-                onChangePassword = onChangePassword,
+                onChangeEmail = { handleIntent(LoginIntent.UpdateEmail(it)) },
+                onChangePassword = { handleIntent(LoginIntent.UpdatePassword(it)) },
                 passwordVisibility = state.passwordVisibility,
-                toggleShowPassword = toggleShowPassword,
-                submitLogin = submitLogin,
+                toggleShowPassword = { handleIntent(LoginIntent.TogglePassword) },
+                submitLogin = { handleIntent(LoginIntent.SubmitLogin) },
                 isButtonLoading = state.isButtonLoading,
                 isButtonEnabled = state.isButtonEnabled
             )
@@ -126,12 +100,12 @@ private fun LoginScreenContent(
             VerticalSpacer(height = NoteSpacings.spacings.small)
             SocialLogins(
                 modifier = Modifier.fillMaxWidth(),
-                onGoogleClick = submitGoogleLogin
+                onGoogleClick = { handleIntent(LoginIntent.SubmitGoogleLogin) }
             )
             WeightSpacer(weight = 1f)
             TextButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = navigateToRegister
+                onClick = { handleIntent(LoginIntent.GoToRegister) }
             ) {
                 Text(
                     text = stringResource(R.string.not_a_member),
@@ -152,14 +126,9 @@ private fun LoginScreenContentPreview(
 ) {
     NoteAppTheme {
         LoginScreenContent(
-            onChangeEmail = {},
-            onChangePassword = {},
-            toggleShowPassword = {},
-            submitLogin = {},
-            submitGoogleLogin = {},
             scaffoldState = rememberScaffoldState(),
             state = state,
-            navigateToRegister = {}
+            handleIntent = {}
         )
     }
 }

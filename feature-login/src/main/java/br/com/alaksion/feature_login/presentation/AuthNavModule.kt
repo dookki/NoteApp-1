@@ -14,16 +14,19 @@ import com.example.navigation.AuthRouter
 fun NavGraphBuilder.NavAuthNavModule(
     controller: NavController
 ) {
-    navigation(startDestination = AuthRouter.Login.route, route = AuthRouter.Graph.route) {
-        composable(AuthRouter.Login.route) {
+    navigation(
+        startDestination = AuthRouter.Routes.Login.path,
+        route = AuthRouter.graph
+    ) {
+        composable(AuthRouter.Routes.Login.path) {
             LoginScreen(controller)
         }
 
-        composable(AuthRouter.Registration.route) {
+        composable(AuthRouter.Routes.Registration.path) {
             RegistrationScreen(controller)
         }
 
-        composable(AuthRouter.RegistrationSuccess.route) {
+        composable(AuthRouter.Routes.RegistrationSuccess.path) {
             RegistrationSuccessScreen(navigator = controller)
         }
 

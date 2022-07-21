@@ -1,4 +1,4 @@
-package br.com.alaksion.authentication
+package br.com.alaksion.feature_home
 
 import org.junit.Test
 

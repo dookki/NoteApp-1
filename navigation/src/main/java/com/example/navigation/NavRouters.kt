@@ -1,14 +1,26 @@
 package com.example.navigation
 
 interface NavRouter {
-    val route: String
+    val graph: String
 }
 
-private const val GraphRoute = "auth"
+object AuthRouter : NavRouter {
 
-sealed class AuthRouter(override val route: String) : NavRouter {
-    object Graph : AuthRouter(GraphRoute)
-    object Login : AuthRouter("$GraphRoute/login")
-    object Registration : AuthRouter("$GraphRoute/registration")
-    object RegistrationSuccess: AuthRouter("$GraphRoute/registration/success")
+    override val graph: String get() = "auth"
+
+    enum class Routes(val path: String) {
+        Login("$graph/login"),
+        Registration("$graph/registration"),
+        RegistrationSuccess("$graph/registration/success")
+    }
+}
+
+object HomeRouter : NavRouter {
+
+    override val graph: String get() = "home"
+
+    enum class Routes(val path: String) {
+        Home("$graph/home"),
+
+    }
 }

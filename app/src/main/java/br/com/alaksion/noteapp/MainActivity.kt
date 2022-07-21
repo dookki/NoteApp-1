@@ -7,8 +7,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import br.com.alaksion.core_ui.theme.NoteAppTheme
+import br.com.alaksion.feature_home.HomeNavModule
 import br.com.alaksion.feature_login.presentation.NavAuthNavModule
-import com.example.navigation.AuthRouter
+import br.com.alaksion.utils.injection.rememberViewModel
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.compose.withDI
@@ -22,8 +23,13 @@ class MainActivity : ComponentActivity(), DIAware {
             NoteAppTheme {
                 withDI(AppDi) {
                     val controller = rememberNavController()
-                    NavHost(navController = controller, startDestination = AuthRouter.Graph.route) {
+                    val viewModel = rememberViewModel<MainViewModel>()
+                    NavHost(
+                        navController = controller,
+                        startDestination = viewModel.getStartDestination().graph
+                    ) {
                         NavAuthNavModule(controller)
+                        HomeNavModule(controller)
                     }
                 }
             }

@@ -37,20 +37,24 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.core.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    
 }
 
 dependencies {
     implementation(projects.coreUi)
     implementation(projects.firebase.authentication)
     implementation(projects.featureLogin)
+    implementation(projects.featureHome)
     implementation(projects.navigation)
+    implementation(projects.utils.injection)
 
     implementation(libs.compose.navigation)
     implementation(libs.androidx.core.ktx)

@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 
 internal sealed class LoginEvents {
     object LoginSuccess : LoginEvents()
+    object GoToRegister : LoginEvents()
+    object LaunchGoogleLogin : LoginEvents()
     data class LoginError(val message: String) : LoginEvents()
 }
 
@@ -31,14 +33,28 @@ internal class LoginViewModel(
     private val mutableState = MutableStateFlow(LoginState())
     val state = mutableState.asStateFlow()
 
-    fun onChangeEmail(value: String) {
+    fun handleIntent(intent: LoginIntent) {
+        when (intent) {
+            is LoginIntent.UpdateEmail -> onChangeEmail(intent.newValue)
+            is LoginIntent.UpdatePassword -> onChangePassword(intent.newValue)
+            is LoginIntent.TogglePassword -> togglePasswordVisibility()
+            is LoginIntent.SubmitLogin -> submitLogin()
+            is LoginIntent.SubmitGoogleLogin ->
+                viewModelScope.launch { eventChannel.send(LoginEvents.LaunchGoogleLogin) }
+            is LoginIntent.GoToRegister ->
+                viewModelScope.launch { eventChannel.send(LoginEvents.GoToRegister) }
+
+        }
+    }
+
+    private fun onChangeEmail(value: String) {
         mutableState.update {
             it.copy(email = value)
         }
         checkButtonEnabled()
     }
 
-    fun onChangePassword(value: String) {
+    private fun onChangePassword(value: String) {
         mutableState.update {
             it.copy(password = value)
         }
@@ -51,7 +67,7 @@ internal class LoginViewModel(
         }
     }
 
-    fun togglePasswordVisibility() {
+    private fun togglePasswordVisibility() {
         mutableState.update {
             it.copy(
                 passwordVisibility = it.passwordVisibility.toggle()
@@ -59,7 +75,7 @@ internal class LoginViewModel(
         }
     }
 
-    fun submitLogin() {
+    private fun submitLogin() {
         val currentState = mutableState.value
 
         mutableState.update { state -> state.copy(isButtonLoading = true) }
@@ -91,7 +107,7 @@ internal class LoginViewModel(
         viewModelScope.launch(dispatcher) {
             result?.run {
                 eventChannel.send(LoginEvents.LoginSuccess)
-            }
+            } ?: eventChannel.send(LoginEvents.LoginError("Login Failed"))
         }
     }
 

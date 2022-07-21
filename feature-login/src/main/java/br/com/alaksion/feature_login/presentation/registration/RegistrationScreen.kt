@@ -57,7 +57,9 @@ internal fun RegistrationScreen(
                     state.snackbarHostState.showSnackbar(message = event.message)
                 }
                 is RegistrationEvents.NavigateToHome -> {
-                    navigator.navigate(AuthRouter.RegistrationSuccess.route)
+                    navigator.navigate(
+                        AuthRouter.Routes.RegistrationSuccess.path
+                    )
                 }
             }
         }
