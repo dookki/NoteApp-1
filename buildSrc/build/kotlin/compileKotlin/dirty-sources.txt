@@ -1,0 +1,2 @@
+C:\Users\lucca\StudioProjects\NoteApp\buildSrc\src\main\kotlin\Java.kt
+C:\Users\lucca\StudioProjects\NoteApp\buildSrc\src\main\kotlin\Compose.kt

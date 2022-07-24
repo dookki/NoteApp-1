@@ -10,7 +10,7 @@ compose-navigation = "2.4.2"
 
 junit = "4.13.2"
 
-agp = "7.2.1"
+agp = "7.1.2"
 kotlin = "1.7.10"
 
 firebase = "29.3.1"
@@ -56,7 +56,6 @@ google-play-services = { module = "com.google.android.gms:play-services-auth", v
 
 kodein-core = { module = "org.kodein.di:kodein-di", version.ref = "kodein" }
 kodein-compose = { module = "org.kodein.di:kodein-di-framework-compose", version.ref = "kodein-compose" }
-
 
 [bundles]
 compose-ui = ["compose-ui", "compose-preview", "compose-material"]
